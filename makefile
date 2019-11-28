@@ -1,8 +1,8 @@
-grafica.png : data.dat wave.x graficar.py
+evolve_A.png : evolve_30_450.dat wave.x graficar.py
 	python graficar.py
 
-data.dat : wave.x
-	./wave.x 1 > data.dat
+evolve_30_450.dat : wave.x
+	./wave.x 0 > evolve_30_450.dat
 	
 wave.x : wave.cpp
 	c++ wave.cpp -o wave.x

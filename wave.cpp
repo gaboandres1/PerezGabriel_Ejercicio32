@@ -4,10 +4,10 @@
 
 const float T0 = 0;
 const float TL = 0;
-const float Tmax = 10;
-const float L = 1;
-const float rho = 1;
-const float T_constant = 0.2;
+const float Tmax = 0.1;
+const float L = 1.0;
+const float rho = 0.01;
+const float T_constant = 40;
 const float c = sqrt(T_constant/rho);
 const float pi = asin(1.0)*2.0;
 float dT;
@@ -22,10 +22,10 @@ void analyticWaveEquation(float **);
 
 int main(int argc, char **argv){
 	int input = atoi(argv[1]);
-    dT = 0.01;
-    dX = 0.01;    
-	nT = (int) Tmax/dT;
-	Nx = (int) (L/dX + 1);
+    dX = 1.0/100.0;
+    dT = sqrt(rho/T_constant)/100.0;
+	nT = (int) (Tmax/dT);
+	Nx = (int) (L/dX)+1;
     c_prime = dX/dT;
 
 	
@@ -35,7 +35,7 @@ int main(int argc, char **argv){
     }
 	
 	for(int i=0; i<Nx; i++){
-        if(input == 0) *(*(T+0)+i) = sin(pi*i*dX/L);
+        if(input == 0) *(*(T+0)+i) = 1e-4*sin(2.0*pi*i*dX/L);
         else
             for(int j=0; j<nT; j++){
                 *(*(T+j)+i) = 0.0;

@@ -18,9 +18,10 @@ float c_prime;
 
 void FTCS(float **);
 void mostrarMatriz(float **, int, int);
+void analyticWaveEquation(float **);
 
 int main(int argc, char **argv){
-	
+	int input = atoi(argv[1]);
     dT = 0.01;
     dX = 0.01;    
 	nT = (int) Tmax/dT;
@@ -34,7 +35,11 @@ int main(int argc, char **argv){
     }
 	
 	for(int i=0; i<Nx; i++){
-		*(*(T+0)+i) = sin(pi*i*dX/L);
+        if(input == 0) *(*(T+0)+i) = sin(pi*i*dX/L);
+        else
+            for(int j=0; j<nT; j++){
+                *(*(T+j)+i) = 0.0;
+            }
 	}
     /*
     for(int i = 0; i<Nx; i++){
@@ -47,8 +52,9 @@ int main(int argc, char **argv){
                 *(*(T+0)+i) = 5 - 5*i*dX/L;
         }
     }*/
-	
-    FTCS(T);
+	if (input==0) FTCS(T);
+    else analyticWaveEquation(T);
+    
     mostrarMatriz(T, nT, Nx);
 	
     for(int i=0;i<nT;i++){
@@ -67,7 +73,6 @@ void FTCS(float **T){
         else
             *(*(T+1)+i) = *(*(T+0)+i) + pow(c,2)/(2*pow(c_prime,2))*( *(*(T+0)+i+1) + *(*(T+0)+i-1) - *(*(T+0)+i)*2 );
     }// Se completan los demás casos.
-    
     for(int j=2; j<nT; j++){
         for(int i=0; i<Nx; i++){
             if(i == 0)
@@ -76,6 +81,15 @@ void FTCS(float **T){
                 *(*(T+j)+i) = TL;
             else
                 *(*(T+j)+i) = *(*(T+j-1)+i)*2 - *(*(T+j-2)+i) + pow(c,2)/pow(c_prime,2)*( *(*(T+j-1)+i+1) + *(*(T+j-1)+i-1) - *(*(T+j-1)+i)*2 );
+        }
+    }
+}
+void analyticWaveEquation(float **T){
+    for(int j=0; j<nT; j++){
+        for(int i=0; i<Nx; i++){
+            for(int n=1; n<200;n++){
+                *(*(T+j)+i) += 6.25*sin(0.8*n*pi)/pow(n*pi,2) * sin(i*dX*pi*(n+1.0)/L)*cos(n*2.0*pi*c/L*j*dT);
+            }
         }
     }
 }
